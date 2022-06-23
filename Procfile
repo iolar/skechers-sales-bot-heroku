@@ -1,0 +1,1 @@
+web: python discount_bot.py
