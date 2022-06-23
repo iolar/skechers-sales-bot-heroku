@@ -1,4 +1,3 @@
-import logging
 import os
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
@@ -154,7 +153,6 @@ async def get_discounts_other(message: types.Message):
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
     executor.start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
