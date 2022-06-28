@@ -4,6 +4,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.utils.markdown import hbold, hlink
 from main import collect_data
 import json
+import time
 
 TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
@@ -29,15 +30,21 @@ async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
-async def show_data(shoes_category, message: types.Message):
-    if len(shoes_category) != 0:
-        for item in shoes_category:
+async def show_data(message: types.Message):
+    with open('result.json') as file:
+        data = json.load(file)
+
+    if len(data) != 0:
+        for index, item in enumerate(data):
             card = f"{hlink(item.get('Название'), item.get('Ссылка'))}\n" \
                 f"{hbold('Старая цена: ')} {(item.get('Старая цена'))}\n" \
                 f"{hbold('Цена со скидкой -')}{hbold(item.get('Скидка'))}:  {(item.get('Цена со скидкой'))} 🔥\n" \
                 f"{hbold('Количество отзывов: ')} {(item.get('Количество отзывов'))}"
 
             await message.answer(card)
+
+            if index % 20 == 0:
+                time.sleep(3)
 
     else:
         await message.answer('В данной категории отсутствуют товары для отображения 😕')
@@ -46,11 +53,11 @@ async def show_data(shoes_category, message: types.Message):
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     start_buttons = ["Кроссовки", "Ботинки", "Полуботинки",
-                     "Слипоны", "Кеды", "Клоги", "Другое"]
+                     "Слипоны", "Кеды", "Клоги"]
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*start_buttons)
 
-    await message.answer('Товары со скидкой в интернет-магазине Skechers',
+    await message.answer('Мужская обувь размера 44-45 со скидкой в интернет-магазине Skechers',
                          reply_markup=keyboard)
 
 
@@ -58,98 +65,54 @@ async def start(message: types.Message):
 async def get_discounts_running_shoes(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data()
+    collect_data(shoes_type='krossovki')
 
-    with open('result.json') as file:
-        data = json.load(file)
-
-    running_shoes = [x for x in data if x.get("Категория") == "Кроссовки"]
-
-    await show_data(running_shoes, message)
+    await show_data(message)
 
 
 @dp.message_handler(Text(equals='Ботинки'))
 async def get_discounts_boots(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data()
+    collect_data(shoes_type='botinki')
 
-    with open('result.json') as file:
-        data = json.load(file)
-
-    boots = [x for x in data if x.get("Категория") == "Ботинки"]
-
-    await show_data(boots, message)
+    await show_data(message)
 
 
 @dp.message_handler(Text(equals='Полуботинки'))
 async def get_discounts_low_shoes(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data()
+    collect_data(shoes_type='polubotinki')
 
-    with open('result.json') as file:
-        data = json.load(file)
-
-    low_shoes = [x for x in data if x.get("Категория") == "Полуботинки"]
-
-    await show_data(low_shoes, message)
+    await show_data(message)
 
 
 @dp.message_handler(Text(equals='Слипоны'))
 async def get_discounts_slipOns(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data()
+    collect_data(shoes_type='slipony')
 
-    with open('result.json') as file:
-        data = json.load(file)
-
-    slipOns = [x for x in data if x.get("Категория") == "Слипоны"]
-
-    await show_data(slipOns, message)
+    await show_data(message)
 
 
 @dp.message_handler(Text(equals='Кеды'))
 async def get_discounts_sneakers(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data()
+    collect_data(shoes_type='kedy')
 
-    with open('result.json') as file:
-        data = json.load(file)
-
-    sneakers = [x for x in data if x.get("Категория") == "Кеды"]
-
-    await show_data(sneakers, message)
+    await show_data(message)
 
 
 @dp.message_handler(Text(equals='Клоги'))
 async def get_discounts_clogs(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data()
+    collect_data(shoes_type='klogi')
 
-    with open('result.json') as file:
-        data = json.load(file)
-
-    clogs = [x for x in data if x.get("Категория") == "Клоги"]
-
-    await show_data(clogs, message)
-
-
-@dp.message_handler(Text(equals='Другое'))
-async def get_discounts_other(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data()
-
-    with open('result.json') as file:
-        data = json.load(file)
-
-    other = [x for x in data if x.get("Категория") == "Другое"]
-
-    await show_data(other, message)
+    await show_data(message)
 
 
 def main():
