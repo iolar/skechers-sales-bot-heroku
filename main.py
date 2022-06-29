@@ -9,46 +9,48 @@ headers = {
 
 
 def collect_data(shoes_type):
-    url = f'https://www.skechers.ru/catalog/muzhchinam/obuv/?f-promotion%3Aglobalpromo=true&f-ware_grp=ware_grp_{shoes_type}&f-ra=size_44%2Csize_45'
+    url = f'https://www.sportmaster.ru/catalog/brendy/skechers/muzhskaya_obuv/?f-ra=size_44,size_45&f-id_ware_subgrp=ware_subgrp_{shoes_type}&f-promotion:globalpromo=true'
     response = requests.get(url=url, headers=headers)
+    # with open('index.html') as file:
+    #     src = file.read()
     soup = BeautifulSoup(response.text, 'lxml')
-    shoes_items = soup.find_all('div', class_="catalog__item")
+    try:
+        shoes_items = soup.find('div', class_="sm-product-grid--size-xs") \
+            .find_all('div', class_='sm-product-card__info')
 
-    data = []
-    for shoes_item in shoes_items:
-        shoes_title = shoes_item.find('a', class_='product-small-card__title').text
-        shoes_url = 'https://www.skechers.ru' + \
-                    shoes_item.find('a', class_="product-small-card__img-container").get('href')
-        shoes_new_price = shoes_item.find('div', class_="product-small-card__old-price")\
-            .find_previous_sibling().text.replace('₽', '').strip()
-        shoes_old_price = shoes_item.find('div', class_="product-small-card__old-price")\
-            .text.replace('₽', '').strip()
-        shoes_discount = shoes_item.find('div', class_="product-small-card__discount")\
-            .text.replace('-', '')
+        data = []
+        for shoes_item in shoes_items:
+            shoes_title = shoes_item.find('div', class_="sm-text-text-14").find('a').text.strip()
+            shoes_url = 'https://www.sportmaster.ru' + \
+                        shoes_item.find('div', class_="sm-text-text-14").find('a').get('href')
+            shoes_new_price = int(shoes_item.find('span', class_="sm-amount_default") \
+                                  .find('span').find('span').text.replace(' ', '').replace('₽', ''))
+            shoes_old_price = int(shoes_item.find('span', class_="sm-amount_old") \
+                                  .find('span').find('span').text.replace(' ', '').replace('₽', ''))
+            shoes_discount = round(((shoes_old_price - shoes_new_price) / shoes_old_price) * 100)
 
-        try:
-            shoes_reviews = shoes_item.find('a', class_="rating-summary__rating-label")\
-                .text
-        except:
-            shoes_reviews = 'Нет отзывов'
-        # try:
-        #     shoes_image = shoes_item.find('img').get('src')
-        # except:
-        #     shoes_image = 'Нет картинки'
-        # print(shoes_title, shoes_new_price, shoes_old_price, shoes_discount, shoes_reviews,
-        #       shoes_url, '\n', shoes_image)
-        data.append(
-            {
-                "Название": shoes_title,
-                "Ссылка":  shoes_url,
-                "Цена со скидкой": shoes_new_price,
-                "Старая цена": shoes_old_price,
-                "Скидка": shoes_discount,
-                "Количество отзывов": shoes_reviews
-            }
-        )
-    with open('result.json', 'w') as file:
-        json.dump(data, file, indent=4, ensure_ascii=False)
+            try:
+                shoes_reviews = shoes_item.find('div', class_="feedback__rating-wrapper")\
+                    .find('span').text.strip()
+            except:
+                shoes_reviews = 'нет отзывов'
+
+            data.append(
+                {
+                    "Название": shoes_title,
+                    "Ссылка":  shoes_url,
+                    "Цена со скидкой": shoes_new_price,
+                    "Старая цена": shoes_old_price,
+                    "Скидка": shoes_discount,
+                    "Количество отзывов": shoes_reviews
+                }
+            )
+            with open('result.json', 'w') as file:
+                json.dump(data, file, indent=4, ensure_ascii=False)
+            # print(shoes_title, shoes_new_price, shoes_old_price, shoes_discount, shoes_reviews, '\n', shoes_url)
+    except Exception:
+        with open('result.json', 'w') as file:
+            json.dump('', file, indent=4, ensure_ascii=False)
 
 
 def main():

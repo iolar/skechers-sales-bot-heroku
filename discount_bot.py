@@ -38,7 +38,7 @@ async def show_data(message: types.Message):
         for index, item in enumerate(data):
             card = f"{hlink(item.get('Название'), item.get('Ссылка'))}\n" \
                 f"{hbold('Старая цена: ')} {(item.get('Старая цена'))}\n" \
-                f"{hbold('Цена со скидкой -')}{hbold(item.get('Скидка'))}:  {(item.get('Цена со скидкой'))} 🔥\n" \
+                f"{hbold('Цена со скидкой ')}{hbold(item.get('Скидка'))}% :  {(item.get('Цена со скидкой'))} 🔥\n" \
                 f"{hbold('Количество отзывов: ')} {(item.get('Количество отзывов'))}"
 
             await message.answer(card)
@@ -53,11 +53,11 @@ async def show_data(message: types.Message):
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     start_buttons = ["Кроссовки", "Ботинки", "Полуботинки",
-                     "Слипоны", "Кеды", "Клоги"]
+                     "Слипоны", "Кеды", "Сандалии"]
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*start_buttons)
 
-    await message.answer('Мужская обувь размера 44-45 со скидкой в интернет-магазине Skechers',
+    await message.answer('Мужская обувь брэнда Skechers размера 44-45 со скидкой в интернет-магазине Спортмастер',
                          reply_markup=keyboard)
 
 
@@ -106,11 +106,11 @@ async def get_discounts_sneakers(message: types.Message):
     await show_data(message)
 
 
-@dp.message_handler(Text(equals='Клоги'))
+@dp.message_handler(Text(equals='Сандалии'))
 async def get_discounts_clogs(message: types.Message):
     await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
 
-    collect_data(shoes_type='klogi')
+    collect_data(shoes_type='sandalii')
 
     await show_data(message)
 
