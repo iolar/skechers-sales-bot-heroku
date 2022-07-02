@@ -9,7 +9,7 @@ headers = {
 
 
 def collect_data(shoes_type):
-    url = f'https://www.sportmaster.ru/catalog/brendy/skechers/muzhskaya_obuv/?f-ra=size_44,size_45&f-id_ware_subgrp=ware_subgrp_{shoes_type}&f-promotion:globalpromo=true'
+    url = f'https://www.sportmaster.ru/catalog/brendy/skechers/muzhskaya_obuv/?f-ware_grp=ware_grp_{shoes_type}&f-ra=size_44,size_45&f-promotion:globalpromo=true'
     response = requests.get(url=url, headers=headers)
     # with open('index.html') as file:
     #     src = file.read()
