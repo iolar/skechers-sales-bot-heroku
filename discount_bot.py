@@ -30,16 +30,20 @@ async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
-async def show_data(message: types.Message):
+async def show_data(message: types.Message, shoes_type):
+    await message.answer('Одну секундочку... ')
+
     with open('result.json') as file:
         data = json.load(file)
 
-    if len(data) != 0:
-        for index, item in enumerate(data):
+    shoes_category = [x for x in data if x.get("Категория") == shoes_type]
+
+    if len(shoes_category) != 0:
+        for index, item in enumerate(shoes_category):
             card = f"{hlink(item.get('Название'), item.get('Ссылка'))}\n" \
-                f"{hbold('Старая цена: ')} {(item.get('Старая цена'))}\n" \
-                f"{hbold('Цена со скидкой ')}{hbold(item.get('Скидка'))}% :  {(item.get('Цена со скидкой'))} 🔥\n" \
-                f"{hbold('Количество отзывов: ')} {(item.get('Количество отзывов'))}"
+                   f"{hbold('Старая цена: ')} {(item.get('Старая цена'))}\n" \
+                   f"{hbold('Цена со скидкой ')}{hbold(item.get('Скидка'))}% :  {(item.get('Цена со скидкой'))} 🔥\n" \
+                   f"{hbold('Количество отзывов: ')} {(item.get('Количество отзывов'))}"
 
             await message.answer(card)
 
@@ -48,6 +52,8 @@ async def show_data(message: types.Message):
 
     else:
         await message.answer('В данной категории отсутствуют товары для отображения 😕')
+
+    await message.answer(f'Информация собрана с сайта: {hbold(data[0].get("datetime"))}')
 
 
 @dp.message_handler(commands='start')
@@ -61,58 +67,16 @@ async def start(message: types.Message):
                          reply_markup=keyboard)
 
 
-@dp.message_handler(Text(equals='Кроссовки'))
-async def get_discounts_running_shoes(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data(shoes_type='krossovki')
-
-    await show_data(message)
+@dp.message_handler(Text(equals=("Кроссовки", "Ботинки", "Полуботинки",
+                                 "Слипоны", "Кеды", "Сандалии")))
+async def get_discounts(message: types.Message):
+    await show_data(message, message.text)
 
 
-@dp.message_handler(Text(equals='Ботинки'))
-async def get_discounts_boots(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data(shoes_type='botinki')
-
-    await show_data(message)
-
-
-@dp.message_handler(Text(equals='Полуботинки'))
-async def get_discounts_low_shoes(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data(shoes_type='polubotinki')
-
-    await show_data(message)
-
-
-@dp.message_handler(Text(equals='Слипоны'))
-async def get_discounts_slipOns(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data(shoes_type='slipony')
-
-    await show_data(message)
-
-
-@dp.message_handler(Text(equals='Кеды'))
-async def get_discounts_sneakers(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data(shoes_type='kedy')
-
-    await show_data(message)
-
-
-@dp.message_handler(Text(equals='Сандалии'))
-async def get_discounts_clogs(message: types.Message):
-    await message.answer('Пожалуйста, подождите... Собираю информацию с сайта...')
-
-    collect_data(shoes_type='sandalii')
-
-    await show_data(message)
+@dp.message_handler()
+async def get_discounts(message: types.Message):
+    await message.answer("Не надо мне ничего писать, я - глупый бот, и умею только показывать скидки на обувь 😔\n"
+                         "Лучше просто разверните меню внизу и нажмите на кнопочку с категорией обуви 😉")
 
 
 def main():
