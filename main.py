@@ -71,6 +71,8 @@ def fetch_data():
 
 def main():
     fetch_data()
+    with open('result.json') as file:
+        print(f'Файл {file.name} создан {cur_time}')
 
 
 if __name__ == '__main__':
