@@ -14,7 +14,7 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job('interval', minutes=240, next_run_time=(datetime.now() + timedelta(seconds=10)))
 def fetch_data():
-    locale.setlocale(locale.LC_TIME, ('Russian_Russia', 'utf8'))
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
     cur_time = datetime.now(timezone(timedelta(hours=7))).strftime('%a %#d %b %Y %#H:%M')
     url = f'https://www.sportmaster.ru/catalog/brendy/skechers/muzhskaya_obuv/?f-ra=size_44,size_45&f-promotion:globalpromo=true'
     response = requests.get(url=url, headers=headers)
