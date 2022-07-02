@@ -1,6 +1,6 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime, timedelta
-from discount_bot import fetch_data, cur_time
+from main import fetch_data, cur_time
 
 sched = BlockingScheduler()
 
