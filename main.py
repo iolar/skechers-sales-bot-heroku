@@ -2,12 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from datetime import datetime, timezone, timedelta
+import locale
 
 headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0'
 }
-cur_time = datetime.now(timezone(timedelta(hours=7))).strftime('%#d.%#m.%Y %#H:%M')
+locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+cur_time = datetime.now(timezone(timedelta(hours=7))).strftime('%a %#d %b %Y %#H:%M')
 
 
 def fetch_data():
