@@ -70,7 +70,9 @@ def fetch_data():
         )
         with open('result.json', 'w') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
-            print(f'Файл {file} создан!')
+
+    with open('result.json') as file:
+        print(f'Файл {file.name} создан!')
         # print(shoes_title, shoes_new_price, shoes_old_price, shoes_discount, shoes_reviews, '\n', shoes_url)
 
 
