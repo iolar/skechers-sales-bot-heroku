@@ -1,2 +1,2 @@
 web: python discount_bot.py
-clock: python main.py
+worker: python main.py
