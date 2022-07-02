@@ -8,11 +8,11 @@ headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0'
 }
-locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
-cur_time = datetime.now(timezone(timedelta(hours=7))).strftime('%a %#d %b %Y %#H:%M')
 
 
 def fetch_data():
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+    cur_time = datetime.now(timezone(timedelta(hours=7))).strftime('%a %#d %b %Y %#H:%M')
     url = f'https://www.sportmaster.ru/catalog/brendy/skechers/muzhskaya_obuv/?f-ra=size_44,size_45&f-promotion:globalpromo=true'
     response = requests.get(url=url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
