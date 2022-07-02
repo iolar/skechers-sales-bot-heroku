@@ -13,7 +13,6 @@ cur_time = datetime.now(timezone(timedelta(hours=7))).strftime('%a %#d %b %Y %#H
 
 
 def fetch_data():
-
     url = f'https://www.sportmaster.ru/catalog/brendy/skechers/muzhskaya_obuv/?f-ra=size_44,size_45&f-promotion:globalpromo=true'
     response = requests.get(url=url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
