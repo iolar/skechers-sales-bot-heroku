@@ -64,14 +64,14 @@ def fetch_data():
                 "Количество отзывов": shoes_reviews
             }
         )
-        with open('result.json', 'w') as file:
+        with open('data.json', 'w') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
         # print(shoes_title, shoes_new_price, shoes_old_price, shoes_discount, shoes_reviews, '\n', shoes_url)
 
 
 def main():
     fetch_data()
-    with open('result.json') as file:
+    with open('data.json') as file:
         print(f'Файл {file.name} создан {cur_time}')
 
 

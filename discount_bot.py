@@ -32,7 +32,7 @@ async def on_shutdown(dispatcher):
 async def show_data(message: types.Message, shoes_type):
     await message.answer('Одну секундочку... ')
 
-    with open('result.json') as file:
+    with open('data.json') as file:
         data = json.load(file)
 
     shoes_category = [x for x in data if x.get("Категория") == shoes_type]
