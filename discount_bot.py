@@ -2,7 +2,8 @@ import os
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 from aiogram.utils.markdown import hbold, hlink
-from ftp_file_operations import ftp_read_file
+from ftp_file_operations import ftp_fetch_file
+import json
 import time
 
 TOKEN = os.getenv('BOT_TOKEN')
@@ -32,8 +33,10 @@ async def on_shutdown(dispatcher):
 async def show_data(message: types.Message, shoes_type):
     await message.answer('Одну секундочку... ')
 
-    ftp_read_file(filename='skechers.json')
-    data = ftp_read_file()
+    ftp_fetch_file()
+
+    with open('result.json') as file:
+        data = json.load(file)
 
     shoes_category = [x for x in data if x.get("Категория") == shoes_type]
 
