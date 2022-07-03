@@ -4,9 +4,9 @@ import time
 from io import BytesIO
 import os
 
-HOSTNAME = os.getenv('ftp.drivehq.com')
-USERNAME = os.getenv('iolar')
-PASSWORD = os.getenv('A%tDFuN9Mqrp&D')
+HOSTNAME = os.getenv('FTP_HOSTNAME')
+USERNAME = os.getenv('FTP_USERNAME')
+PASSWORD = os.getenv('FTP_PASSWORD')
 
 ftp_server = ftplib.FTP(HOSTNAME, USERNAME, PASSWORD)
 ftp_server.encoding = "utf-8"
