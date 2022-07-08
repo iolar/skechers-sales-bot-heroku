@@ -115,6 +115,12 @@ async def get_discounts_clogs(message: types.Message):
     await show_data(message)
 
 
+@dp.message_handler()
+async def get_discounts(message: types.Message):
+    await message.answer("Не надо мне ничего писать, я - глупый бот, и умею только показывать скидки на обувь 😔\n"
+                         "Лучше просто разверните меню внизу и нажмите на кнопочку с категорией обуви 😉")
+
+
 def main():
     executor.start_webhook(
         dispatcher=dp,
